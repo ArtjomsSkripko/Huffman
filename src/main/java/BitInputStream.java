@@ -10,7 +10,6 @@ public class BitInputStream {
 
     private static final int BYTE_SIZE = 8;  // digits per byte
 
-    // pre : given file name is legal
     // post: creates a BitInputStream reading input from the file
     BitInputStream(String file) {
         try {

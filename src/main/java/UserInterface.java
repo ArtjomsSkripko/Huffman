@@ -1,5 +1,8 @@
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -17,8 +20,15 @@ public class UserInterface {
             f = new File(pathname);
         }
 
-        boolean iscorect = false;
-        while (!iscorect) {
+        while(isFileEmpty(f)) {
+            System.out.println("Error: Selected file is empty");
+            System.out.println("Select different file:");
+            pathname = in.nextLine();
+            f = new File(pathname);
+        }
+
+        boolean isCorrect = false;
+        while (!isCorrect) {
             System.out.println("Select action with file: ");
             System.out.println("1    Encode File");
             System.out.println("2    Decode File");
@@ -26,7 +36,7 @@ public class UserInterface {
             switch (answer) {
                 case 1:
                     System.out.println("Encoding.....");
-                    iscorect = true;
+                    isCorrect = true;
 
                     File file = new File(pathname);
                     Encoder encoder = new Encoder();
@@ -35,7 +45,7 @@ public class UserInterface {
                     break;
                 case 2:
                     System.out.println("Decoding.....");
-                    iscorect = true;
+                    isCorrect = true;
 
                     File file2 = new File(pathname);
                     Decoder decoder = new Decoder();
@@ -49,6 +59,11 @@ public class UserInterface {
                     in.close();
             }
         }
+    }
+
+    private static boolean isFileEmpty(File file) throws IOException {
+        byte[] fileBytes = Files.readAllBytes(file.toPath());
+        return fileBytes.length == 0;
     }
 }
 
