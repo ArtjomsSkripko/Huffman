@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -13,18 +11,28 @@ public class UserInterface {
         String pathname = in.nextLine();
         File f = new File(pathname);
 
-        checkIfFileExists(f, in);
-
-        while(isFileEmpty(f)) {
-            System.out.println("Error: Selected file is empty");
-            System.out.println("Select different file:");
+        while (!f.exists()) {
+            System.out.println("Error: This file does not exist");
+            System.out.println("Try again:");
             pathname = in.nextLine();
             f = new File(pathname);
-            checkIfFileExists(f, in);
         }
 
-        boolean isCorrect = false;
-        while (!isCorrect) {
+        while (isFileEmpty(f)) {
+            System.out.println("Error: This file is empty");
+            System.out.println("Try again:");
+            pathname = in.nextLine();
+            f = new File(pathname);
+            while (!f.exists()) {
+                System.out.println("Error: This file does not exist");
+                System.out.println("Try again:");
+                pathname = in.nextLine();
+                f = new File(pathname);
+            }
+        }
+
+        boolean iscorect = false;
+        while (!iscorect) {
             System.out.println("Select action with file: ");
             System.out.println("1    Encode File");
             System.out.println("2    Decode File");
@@ -32,7 +40,7 @@ public class UserInterface {
             switch (answer) {
                 case 1:
                     System.out.println("Encoding.....");
-                    isCorrect = true;
+                    iscorect = true;
 
                     File file = new File(pathname);
                     Encoder encoder = new Encoder();
@@ -41,7 +49,7 @@ public class UserInterface {
                     break;
                 case 2:
                     System.out.println("Decoding.....");
-                    isCorrect = true;
+                    iscorect = true;
 
                     File file2 = new File(pathname);
                     Decoder decoder = new Decoder();
@@ -60,15 +68,6 @@ public class UserInterface {
     private static boolean isFileEmpty(File file) throws IOException {
         byte[] fileBytes = Files.readAllBytes(file.toPath());
         return fileBytes.length == 0;
-    }
-
-    private static void checkIfFileExists(File file, Scanner in){
-        while (!file.exists()) {
-            System.out.println("Error: This file does not exist");
-            System.out.println("Try again:");
-            String pathname = in.nextLine();
-            file = new File(pathname);
-        }
     }
 }
 
